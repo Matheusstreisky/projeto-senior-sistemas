@@ -16,7 +16,7 @@ public interface PedidoService {
 
     PedidoDTO save(PedidoForm pedidoForm);
 
-    PedidoDTO update(PedidoForm pedidoForm) throws Exception;
+    PedidoDTO update(PedidoForm pedidoForm);
 
     void delete(UUID id);
 
@@ -24,7 +24,7 @@ public interface PedidoService {
 
     void close(UUID id);
 
-    void validate(Pedido pedido) throws Exception;
+    void validate(Pedido pedido);
 
     void validateNotFound(UUID id);
 }

@@ -3,6 +3,7 @@ package com.seniorsistemas.project.domain.itempedido.service;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.seniorsistemas.project.config.validation.exception.ItemIsInactive;
 import com.seniorsistemas.project.config.validation.exception.NotFoundException;
 import com.seniorsistemas.project.domain.item.entity.Item;
 import com.seniorsistemas.project.domain.item.repository.ItemRepository;
@@ -47,14 +48,14 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     }
 
     @Override
-    public ItemPedidoDTO save(ItemPedidoForm itemPedidoForm) throws Exception {
+    public ItemPedidoDTO save(ItemPedidoForm itemPedidoForm) {
         ItemPedido itemPedido = ItemPedidoMapper.MAPPER.toEntity(itemPedidoForm);
         validate(itemPedido);
         return ItemPedidoMapper.MAPPER.toDTO(itemPedidoRepository.save(itemPedido));
     }
 
     @Override
-    public ItemPedidoDTO update(ItemPedidoForm itemPedidoForm) throws Exception {
+    public ItemPedidoDTO update(ItemPedidoForm itemPedidoForm) {
         validateNotFound(itemPedidoForm.getId());
         return save(itemPedidoForm);
     }
@@ -66,10 +67,10 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     }
 
     @Override
-    public void validate(ItemPedido itemPedido) throws Exception {
+    public void validate(ItemPedido itemPedido) {
         Optional<Item> optionalItem = itemRepository.findById(itemPedido.getItem().getId());
         if (optionalItem.isPresent() && !optionalItem.get().isAtivo()) {
-            throw new Exception("O item está inativo!");
+            throw new ItemIsInactive();
         }
 
         Optional<Pedido> optionalPedido = pedidoRepository.findById(itemPedido.getPedido().getId());

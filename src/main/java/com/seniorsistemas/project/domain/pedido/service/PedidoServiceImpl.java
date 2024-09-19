@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.seniorsistemas.project.config.validation.exception.NotFoundException;
+import com.seniorsistemas.project.config.validation.exception.PedidoIsAlreadyClosed;
 import com.seniorsistemas.project.domain.item.entity.TipoItem;
 import com.seniorsistemas.project.domain.pedido.dto.PedidoDTO;
 import com.seniorsistemas.project.domain.pedido.entity.Pedido;
@@ -46,7 +47,7 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public PedidoDTO update(PedidoForm pedidoForm) throws Exception {
+    public PedidoDTO update(PedidoForm pedidoForm) {
         validateNotFound(pedidoForm.getId());
 
         Pedido pedido = PedidoMapper.MAPPER.toEntity(pedidoForm);
@@ -79,9 +80,9 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public void validate(Pedido pedido) throws Exception {
+    public void validate(Pedido pedido) {
         if (pedido.getSituacao().equals(SituacaoPedido.FECHADO)) {
-            throw new Exception("O pedido já foi fechado!");
+            throw new PedidoIsAlreadyClosed();
         }
     }
 

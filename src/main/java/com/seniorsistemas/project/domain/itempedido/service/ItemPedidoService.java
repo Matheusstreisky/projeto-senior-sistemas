@@ -14,13 +14,13 @@ public interface ItemPedidoService {
 
     ItemPedidoDTO findById(UUID id);
 
-    ItemPedidoDTO save(ItemPedidoForm itemPedidoForm) throws Exception;
+    ItemPedidoDTO save(ItemPedidoForm itemPedidoForm);
 
-    ItemPedidoDTO update(ItemPedidoForm itemPedidoForm) throws Exception;
+    ItemPedidoDTO update(ItemPedidoForm itemPedidoForm);
 
     void delete(UUID id);
 
-    void validate(ItemPedido itemPedido) throws Exception;
+    void validate(ItemPedido itemPedido);
 
     void validateNotFound(UUID id);
 }

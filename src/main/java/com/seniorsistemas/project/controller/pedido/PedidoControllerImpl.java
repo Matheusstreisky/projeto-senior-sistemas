@@ -56,7 +56,7 @@ public class PedidoControllerImpl implements PedidoController {
 
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<PedidoDTO> update(@PathVariable UUID id, @Valid @RequestBody PedidoForm pedidoForm) throws Exception {
+    public ResponseEntity<PedidoDTO> update(@PathVariable UUID id, @Valid @RequestBody PedidoForm pedidoForm) {
         pedidoForm.setId(id);
         return ResponseEntity.ok(pedidoService.update(pedidoForm));
     }

@@ -16,7 +16,7 @@ public interface ItemPedidoController {
 
     ResponseEntity<ItemPedidoDTO> create(ItemPedidoForm itemPedidoForm);
 
-    ResponseEntity<ItemPedidoDTO> update(UUID id, ItemPedidoForm itemPedidoForm) throws Exception;
+    ResponseEntity<ItemPedidoDTO> update(UUID id, ItemPedidoForm itemPedidoForm);
 
     ResponseEntity<Void> delete(UUID id);
 }

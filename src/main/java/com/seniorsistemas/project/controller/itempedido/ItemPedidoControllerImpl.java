@@ -44,23 +44,19 @@ public class ItemPedidoControllerImpl implements ItemPedidoController {
     @Override
     @PostMapping
     public ResponseEntity<ItemPedidoDTO> create(@Valid @RequestBody ItemPedidoForm itemPedidoForm) {
-        try {
-            ItemPedidoDTO createdItemPedido = itemPedidoService.save(itemPedidoForm);
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(createdItemPedido.id())
-                    .toUri();
+        ItemPedidoDTO createdItemPedido = itemPedidoService.save(itemPedidoForm);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(createdItemPedido.id())
+                .toUri();
 
-            return ResponseEntity.created(location).body(createdItemPedido);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.created(location).body(createdItemPedido);
     }
 
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<ItemPedidoDTO> update(@PathVariable UUID id, @Valid @RequestBody ItemPedidoForm itemPedidoForm) throws Exception {
+    public ResponseEntity<ItemPedidoDTO> update(@PathVariable UUID id, @Valid @RequestBody ItemPedidoForm itemPedidoForm) {
         itemPedidoForm.setId(id);
         return ResponseEntity.ok(itemPedidoService.update(itemPedidoForm));
     }
