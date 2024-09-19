@@ -26,8 +26,8 @@ public class PedidoServiceImpl implements PedidoService {
     private PedidoRepository pedidoRepository;
 
     @Override
-    public Page<PedidoDTO> findAll(Pageable pageable) {
-        Page<Pedido> pedidoPage = pedidoRepository.findAll(pageable);
+    public Page<PedidoDTO> findAll(SituacaoPedido situacao, Pageable pageable) {
+        Page<Pedido> pedidoPage = pedidoRepository.findAll(situacao, pageable);
         return pedidoPage.map(this::calcularValores);
     }
 

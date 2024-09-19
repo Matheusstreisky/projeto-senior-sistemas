@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.seniorsistemas.project.config.validation.exception.NotFoundException;
 import com.seniorsistemas.project.domain.item.dto.ItemDTO;
 import com.seniorsistemas.project.domain.item.entity.Item;
+import com.seniorsistemas.project.domain.item.entity.TipoItem;
 import com.seniorsistemas.project.domain.item.form.ItemForm;
 import com.seniorsistemas.project.domain.item.mapper.ItemMapper;
 import com.seniorsistemas.project.domain.item.repository.ItemRepository;
@@ -21,8 +22,8 @@ public class ItemServiceImpl implements ItemService {
     private ItemRepository itemRepository;
 
     @Override
-    public Page<ItemDTO> findAll(Pageable pageable) {
-        Page<Item> itemPage = itemRepository.findAll(pageable);
+    public Page<ItemDTO> findAll(String descricao, TipoItem tipo, Pageable pageable) {
+        Page<Item> itemPage = itemRepository.findAll(descricao, tipo, pageable);
         return itemPage.map(ItemMapper.MAPPER::toDTO);
     }
 

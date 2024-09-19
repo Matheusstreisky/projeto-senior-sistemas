@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.UUID;
 
 import com.seniorsistemas.project.domain.pedido.dto.PedidoDTO;
+import com.seniorsistemas.project.domain.pedido.entity.SituacaoPedido;
 import com.seniorsistemas.project.domain.pedido.form.PedidoForm;
 import com.seniorsistemas.project.domain.pedido.service.PedidoService;
 import jakarta.validation.Valid;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,8 +33,10 @@ public class PedidoControllerImpl implements PedidoController {
 
     @Override
     @GetMapping
-    public ResponseEntity<Page<PedidoDTO>> findAll(@PageableDefault(size = 10) Pageable pageable) {
-        return ResponseEntity.ok(pedidoService.findAll(pageable));
+    public ResponseEntity<Page<PedidoDTO>> findAll(
+            @RequestParam(required = false) SituacaoPedido situacao,
+            @PageableDefault(size = 10) Pageable pageable) {
+        return ResponseEntity.ok(pedidoService.findAll(situacao, pageable));
     }
 
     @Override

@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.UUID;
 
 import com.seniorsistemas.project.domain.item.dto.ItemDTO;
+import com.seniorsistemas.project.domain.item.entity.TipoItem;
 import com.seniorsistemas.project.domain.item.form.ItemForm;
 import com.seniorsistemas.project.domain.item.service.ItemService;
 import jakarta.validation.Valid;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,8 +33,11 @@ public class ItemControllerImpl implements ItemController {
 
     @Override
     @GetMapping
-    public ResponseEntity<Page<ItemDTO>> findAll(@PageableDefault(size = 10) Pageable pageable) {
-        return ResponseEntity.ok(itemService.findAll(pageable));
+    public ResponseEntity<Page<ItemDTO>> findAll(
+            @RequestParam(required = false) String descricao,
+            @RequestParam(required = false) TipoItem tipo,
+            @PageableDefault(size = 10) Pageable pageable) {
+        return ResponseEntity.ok(itemService.findAll(descricao, tipo, pageable));
     }
 
     @Override
