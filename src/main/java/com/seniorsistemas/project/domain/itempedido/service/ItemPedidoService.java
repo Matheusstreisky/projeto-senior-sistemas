@@ -14,7 +14,7 @@ public interface ItemPedidoService {
 
     Page<ItemPedidoDTO> findByPedido(UUID pedidoId, Pageable pageable);
 
-    ItemPedidoDTO save(ItemPedidoForm itemPedidoForm);
+    ItemPedidoDTO save(ItemPedidoForm itemPedidoForm) throws Exception;
 
     void delete(UUID id);
 }

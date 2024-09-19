@@ -3,6 +3,8 @@ package com.seniorsistemas.project.domain.itempedido.service;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.seniorsistemas.project.domain.item.entity.Item;
+import com.seniorsistemas.project.domain.item.repository.ItemRepository;
 import com.seniorsistemas.project.domain.itempedido.dto.ItemPedidoDTO;
 import com.seniorsistemas.project.domain.itempedido.entity.ItemPedido;
 import com.seniorsistemas.project.domain.itempedido.form.ItemPedidoForm;
@@ -19,6 +21,9 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     @Autowired
     private ItemPedidoRepository itemPedidoRepository;
 
+    @Autowired
+    private ItemRepository itemRepository;
+
     @Override
     public Optional<ItemPedidoDTO> findById(UUID id) {
         return ItemPedidoMapper.MAPPER.toOptionalItemDTO(itemPedidoRepository.findById(id));
@@ -31,8 +36,14 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     }
 
     @Override
-    public ItemPedidoDTO save(ItemPedidoForm itemPedidoForm) {
+    public ItemPedidoDTO save(ItemPedidoForm itemPedidoForm) throws Exception {
         ItemPedido itemPedido = ItemPedidoMapper.MAPPER.toEntity(itemPedidoForm);
+        Optional<Item> optionalItem = itemRepository.findById(itemPedido.getItem().getId());
+
+        if (optionalItem.isPresent() && !optionalItem.get().isAtivo()) {
+            throw new Exception("O item está inativo");
+        }
+
         return ItemPedidoMapper.MAPPER.toDTO(itemPedidoRepository.save(itemPedido));
     }
 

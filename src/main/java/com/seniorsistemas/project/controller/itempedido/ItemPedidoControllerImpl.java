@@ -35,25 +35,33 @@ public class ItemPedidoControllerImpl implements ItemPedidoController {
     @Override
     @PostMapping
     public ResponseEntity<ItemPedidoDTO> create(ItemPedidoForm itemPedidoForm) {
-        ItemPedidoDTO createdItemPedido = itemPedidoService.save(itemPedidoForm);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(createdItemPedido.id())
-                .toUri();
+        try {
+            ItemPedidoDTO createdItemPedido = itemPedidoService.save(itemPedidoForm);
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(createdItemPedido.id())
+                    .toUri();
 
-        return ResponseEntity.created(location).body(createdItemPedido);
+            return ResponseEntity.created(location).body(createdItemPedido);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<ItemPedidoDTO> update(UUID id, ItemPedidoForm itemPedidoForm) {
-        Optional<ItemPedidoDTO> existingItemPedido = itemPedidoService.findById(id);
+        try {
+            Optional<ItemPedidoDTO> existingItemPedido = itemPedidoService.findById(id);
 
-        if (existingItemPedido.isPresent()) {
-            return ResponseEntity.ok(itemPedidoService.save(itemPedidoForm));
-        } else {
-            return ResponseEntity.notFound().build();
+            if (existingItemPedido.isPresent()) {
+                return ResponseEntity.ok(itemPedidoService.save(itemPedidoForm));
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
