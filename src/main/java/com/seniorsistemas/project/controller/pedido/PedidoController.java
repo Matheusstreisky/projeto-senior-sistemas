@@ -17,24 +17,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public interface PedidoController {
 
-    @GetMapping
-    ResponseEntity<Page<PedidoDTO>> findAll(@PageableDefault(size = 10) Pageable pageable);
+    ResponseEntity<Page<PedidoDTO>> findAll(Pageable pageable);
 
-    @GetMapping("/{id}")
-    ResponseEntity<PedidoDTO> findById(@PathVariable UUID id);
+    ResponseEntity<PedidoDTO> findById(UUID id);
 
-    @PostMapping
-    ResponseEntity<PedidoDTO> create(@RequestBody PedidoForm pedidoForm);
+    ResponseEntity<PedidoDTO> create(PedidoForm pedidoForm);
 
-    @PutMapping("/{id}")
-    ResponseEntity<PedidoDTO> update(@PathVariable UUID id, @RequestBody PedidoForm pedidoForm);
+    ResponseEntity<PedidoDTO> update(UUID id, PedidoForm pedidoForm);
 
-    @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable UUID id);
+    ResponseEntity<Void> delete(UUID id);
 
-    @PutMapping("/{id}/inactivate")
-    ResponseEntity<Void> inactivate(@PathVariable UUID id);
+    ResponseEntity<Void> inactivate(UUID id);
 
-    @PutMapping("/{id}/close")
-    ResponseEntity<Void> close(@PathVariable UUID id);
+    ResponseEntity<Void> close(UUID id);
 }
