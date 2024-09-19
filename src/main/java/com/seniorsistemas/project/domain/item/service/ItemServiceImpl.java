@@ -3,6 +3,7 @@ package com.seniorsistemas.project.domain.item.service;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.seniorsistemas.project.config.validation.exception.NotFoundException;
 import com.seniorsistemas.project.domain.item.dto.ItemDTO;
 import com.seniorsistemas.project.domain.item.entity.Item;
 import com.seniorsistemas.project.domain.item.form.ItemForm;
@@ -26,8 +27,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Optional<ItemDTO> findById(UUID id) {
-        return ItemMapper.MAPPER.toOptionalItemDTO(itemRepository.findById(id));
+    public ItemDTO findById(UUID id) {
+        validateNotFound(id);
+        return ItemMapper.MAPPER.toDTO(itemRepository.findById(id).get());
     }
 
     @Override
@@ -39,22 +41,32 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDTO update(ItemForm itemForm) {
+        validateNotFound(itemForm.getId());
+
         Item item = ItemMapper.MAPPER.toEntity(itemForm);
         return ItemMapper.MAPPER.toDTO(itemRepository.save(item));
     }
 
     @Override
     public void delete(UUID id) {
+        validateNotFound(id);
         itemRepository.deleteById(id);
     }
 
     @Override
     public void inactivate(UUID id) {
-        Optional<Item> optionalItem = itemRepository.findById(id);
+        validateNotFound(id);
 
-        optionalItem.ifPresent(item -> {
-            item.setAtivo(false);
-            itemRepository.save(item);
-        });
+        Item item = itemRepository.findById(id).get();
+        item.setAtivo(false);
+        itemRepository.save(item);
+    }
+
+    @Override
+    public void validateNotFound(UUID id) {
+        Optional<Item> optionalItem = itemRepository.findById(id);
+        if (optionalItem.isEmpty()) {
+            throw new NotFoundException(id);
+        }
     }
 }

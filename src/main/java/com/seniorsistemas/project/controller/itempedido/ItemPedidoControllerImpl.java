@@ -1,7 +1,6 @@
 package com.seniorsistemas.project.controller.itempedido;
 
 import java.net.URI;
-import java.util.Optional;
 import java.util.UUID;
 
 import com.seniorsistemas.project.domain.itempedido.dto.ItemPedidoDTO;
@@ -37,6 +36,12 @@ public class ItemPedidoControllerImpl implements ItemPedidoController {
     }
 
     @Override
+    @GetMapping("/{id}")
+    public ResponseEntity<ItemPedidoDTO> findById(@PathVariable UUID id) {
+        return ResponseEntity.ok(itemPedidoService.findById(id));
+    }
+
+    @Override
     @PostMapping
     public ResponseEntity<ItemPedidoDTO> create(@Valid @RequestBody ItemPedidoForm itemPedidoForm) {
         try {
@@ -55,31 +60,15 @@ public class ItemPedidoControllerImpl implements ItemPedidoController {
 
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<ItemPedidoDTO> update(@PathVariable UUID id, @Valid @RequestBody ItemPedidoForm itemPedidoForm) {
-        try {
-            Optional<ItemPedidoDTO> existingItemPedido = itemPedidoService.findById(id);
-
-            if (existingItemPedido.isPresent()) {
-                itemPedidoForm.setId(id);
-                return ResponseEntity.ok(itemPedidoService.save(itemPedidoForm));
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<ItemPedidoDTO> update(@PathVariable UUID id, @Valid @RequestBody ItemPedidoForm itemPedidoForm) throws Exception {
+        itemPedidoForm.setId(id);
+        return ResponseEntity.ok(itemPedidoService.update(itemPedidoForm));
     }
 
     @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        Optional<ItemPedidoDTO> existingItemPedido = itemPedidoService.findById(id);
-
-        if (existingItemPedido.isPresent()) {
-            itemPedidoService.delete(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        itemPedidoService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

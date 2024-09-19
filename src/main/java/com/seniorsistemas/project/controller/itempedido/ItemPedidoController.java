@@ -12,9 +12,11 @@ public interface ItemPedidoController {
 
     ResponseEntity<Page<ItemPedidoDTO>> findByPedido(UUID pedidoId, Pageable pageable);
 
+    ResponseEntity<ItemPedidoDTO> findById(UUID id);
+
     ResponseEntity<ItemPedidoDTO> create(ItemPedidoForm itemPedidoForm);
 
-    ResponseEntity<ItemPedidoDTO> update(UUID id, ItemPedidoForm itemPedidoForm);
+    ResponseEntity<ItemPedidoDTO> update(UUID id, ItemPedidoForm itemPedidoForm) throws Exception;
 
     ResponseEntity<Void> delete(UUID id);
 }

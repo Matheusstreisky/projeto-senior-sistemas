@@ -1,7 +1,6 @@
 package com.seniorsistemas.project.controller.item;
 
 import java.net.URI;
-import java.util.Optional;
 import java.util.UUID;
 
 import com.seniorsistemas.project.domain.item.dto.ItemDTO;
@@ -39,8 +38,7 @@ public class ItemControllerImpl implements ItemController {
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<ItemDTO> findById(@PathVariable UUID id) {
-        Optional<ItemDTO> itemDTO = itemService.findById(id);
-        return itemDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(itemService.findById(id));
     }
 
     @Override
@@ -59,39 +57,21 @@ public class ItemControllerImpl implements ItemController {
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<ItemDTO> update(@PathVariable UUID id, @Valid @RequestBody ItemForm itemForm) {
-        Optional<ItemDTO> existingItem = itemService.findById(id);
-
-        if (existingItem.isPresent()) {
-            itemForm.setId(id);
-            return ResponseEntity.ok(itemService.update(itemForm));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        itemForm.setId(id);
+        return ResponseEntity.ok(itemService.update(itemForm));
     }
 
     @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        Optional<ItemDTO> existingItem = itemService.findById(id);
-
-        if (existingItem.isPresent()) {
-            itemService.delete(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        itemService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     @Override
     @PutMapping("/{id}/inactivate")
     public ResponseEntity<Void> inactivate(@PathVariable UUID id) {
-        Optional<ItemDTO> existingItem = itemService.findById(id);
-
-        if (existingItem.isPresent()) {
-            itemService.inactivate(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        itemService.inactivate(id);
+        return ResponseEntity.noContent().build();
     }
 }

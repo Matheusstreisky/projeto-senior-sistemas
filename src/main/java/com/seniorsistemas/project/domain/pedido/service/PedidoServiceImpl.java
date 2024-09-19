@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.seniorsistemas.project.config.validation.exception.NotFoundException;
 import com.seniorsistemas.project.domain.item.entity.TipoItem;
 import com.seniorsistemas.project.domain.pedido.dto.PedidoDTO;
 import com.seniorsistemas.project.domain.pedido.entity.Pedido;
@@ -30,15 +31,11 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public Optional<PedidoDTO> findById(UUID id) {
-        Optional<Pedido> pedido = pedidoRepository.findById(id);
+    public PedidoDTO findById(UUID id) {
+        validateNotFound(id);
 
-        if (pedido.isPresent()) {
-            PedidoDTO pedidoDTO = calcularValores(pedido.get());
-            return Optional.of(pedidoDTO);
-        }
-
-        return Optional.empty();
+        Pedido pedido = pedidoRepository.findById(id).get();
+        return calcularValores(pedido);
     }
 
     @Override
@@ -50,9 +47,35 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     public PedidoDTO update(PedidoForm pedidoForm) throws Exception {
+        validateNotFound(pedidoForm.getId());
+
         Pedido pedido = PedidoMapper.MAPPER.toEntity(pedidoForm);
         validate(pedido);
-        return save(pedidoForm);
+        return PedidoMapper.MAPPER.toDTO(pedidoRepository.save(pedido));
+    }
+
+    @Override
+    public void delete(UUID id) {
+        validateNotFound(id);
+        pedidoRepository.deleteById(id);
+    }
+
+    @Override
+    public void inactivate(UUID id) {
+        validateNotFound(id);
+
+        Pedido pedido = pedidoRepository.findById(id).get();
+        pedido.setAtivo(false);
+        pedidoRepository.save(pedido);
+    }
+
+    @Override
+    public void close(UUID id) {
+        validateNotFound(id);
+
+        Pedido pedido = pedidoRepository.findById(id).get();
+        pedido.setSituacao(SituacaoPedido.FECHADO);
+        pedidoRepository.save(pedido);
     }
 
     @Override
@@ -63,27 +86,11 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public void delete(UUID id) {
-        pedidoRepository.deleteById(id);
-    }
-
-    @Override
-    public void inactivate(UUID id) {
+    public void validateNotFound(UUID id) {
         Optional<Pedido> optionalPedido = pedidoRepository.findById(id);
-
-        optionalPedido.ifPresent(pedido -> {
-            pedido.setAtivo(false);
-            pedidoRepository.save(pedido);
-        });
-    }
-
-    @Override
-    public void close(UUID id) {
-        Optional<Pedido> optionalPedido = pedidoRepository.findById(id);
-        optionalPedido.ifPresent(pedido -> {
-            pedido.setSituacao(SituacaoPedido.FECHADO);
-            pedidoRepository.save(pedido);
-        });
+        if (optionalPedido.isEmpty()) {
+            throw new NotFoundException(id);
+        }
     }
 
     private PedidoDTO calcularValores(Pedido pedido) {

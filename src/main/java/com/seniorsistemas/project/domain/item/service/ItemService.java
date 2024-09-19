@@ -1,6 +1,5 @@
 package com.seniorsistemas.project.domain.item.service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import com.seniorsistemas.project.domain.item.dto.ItemDTO;
@@ -12,7 +11,7 @@ public interface ItemService {
 
     Page<ItemDTO> findAll(Pageable pageable);
 
-    Optional<ItemDTO> findById(UUID id);
+    ItemDTO findById(UUID id);
 
     ItemDTO save(ItemForm itemForm);
 
@@ -21,4 +20,6 @@ public interface ItemService {
     void delete(UUID id);
 
     void inactivate(UUID id);
+
+    void validateNotFound(UUID id);
 }
