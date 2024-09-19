@@ -1,15 +1,16 @@
 package com.seniorsistemas.project.domain.item.service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import com.seniorsistemas.project.domain.item.dto.ItemDTO;
 import com.seniorsistemas.project.domain.item.form.ItemForm;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ItemService {
 
-    List<ItemDTO> findAll();
+    Page<ItemDTO> findAll(Pageable pageable);
 
     Optional<ItemDTO> findById(UUID id);
 

@@ -1,7 +1,6 @@
 package com.seniorsistemas.project.controller.item;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -9,6 +8,8 @@ import com.seniorsistemas.project.domain.item.dto.ItemDTO;
 import com.seniorsistemas.project.domain.item.form.ItemForm;
 import com.seniorsistemas.project.domain.item.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +28,8 @@ public class ItemControllerImpl implements ItemController {
 
     @Override
     @GetMapping
-    public ResponseEntity<List<ItemDTO>> findAll() {
-        return ResponseEntity.ok(itemService.findAll());
+    public ResponseEntity<Page<ItemDTO>> findAll(Pageable pageable) {
+        return ResponseEntity.ok(itemService.findAll(pageable));
     }
 
     @Override

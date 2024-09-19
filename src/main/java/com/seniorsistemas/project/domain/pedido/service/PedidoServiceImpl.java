@@ -2,7 +2,6 @@ package com.seniorsistemas.project.domain.pedido.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,6 +12,8 @@ import com.seniorsistemas.project.domain.pedido.form.PedidoForm;
 import com.seniorsistemas.project.domain.pedido.mapper.PedidoMapper;
 import com.seniorsistemas.project.domain.pedido.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,11 +23,9 @@ public class PedidoServiceImpl implements PedidoService {
     private PedidoRepository pedidoRepository;
 
     @Override
-    public List<PedidoDTO> findAll() {
-        List<Pedido> pedidos = pedidoRepository.findAll();
-        return pedidos.stream()
-                .map(this::calcularValores)
-                .toList();
+    public Page<PedidoDTO> findAll(Pageable pageable) {
+        Page<Pedido> pedidoPage = pedidoRepository.findAll(pageable);
+        return pedidoPage.map(this::calcularValores);
     }
 
     @Override
