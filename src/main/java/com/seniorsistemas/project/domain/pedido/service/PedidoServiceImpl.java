@@ -51,6 +51,16 @@ public class PedidoServiceImpl implements PedidoService {
         pedidoRepository.deleteById(id);
     }
 
+    @Override
+    public void inactivate(UUID id) {
+        Optional<Pedido> optionalPedido = pedidoRepository.findById(id);
+
+        optionalPedido.ifPresent(item -> {
+            item.setAtivo(false);
+            pedidoRepository.save(item);
+        });
+    }
+
     private PedidoDTO calcularValores(Pedido pedido) {
         PedidoDTO pedidoDTO = PedidoMapper.MAPPER.toDTO(pedido);
         pedidoDTO = pedidoDTO.withValorTotal(getValorTotal(pedidoDTO));

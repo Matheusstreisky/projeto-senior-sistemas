@@ -40,4 +40,14 @@ public class ItemServiceImpl implements ItemService {
     public void delete(UUID id) {
         itemRepository.deleteById(id);
     }
+
+    @Override
+    public void inactivate(UUID id) {
+        Optional<Item> optionalItem = itemRepository.findById(id);
+
+        optionalItem.ifPresent(item -> {
+            item.setAtivo(false);
+            itemRepository.save(item);
+        });
+    }
 }

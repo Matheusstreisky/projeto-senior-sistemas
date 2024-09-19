@@ -17,4 +17,6 @@ public interface PedidoService {
     PedidoDTO save(PedidoForm pedidoForm);
 
     void delete(UUID id);
+
+    void inactivate(UUID id);
 }

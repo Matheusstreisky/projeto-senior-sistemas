@@ -9,6 +9,7 @@ public record ItemDTO(
         UUID id,
         String descricao,
         TipoItem tipo,
-        BigDecimal valor
+        BigDecimal valor,
+        boolean ativo
 ) {
 }

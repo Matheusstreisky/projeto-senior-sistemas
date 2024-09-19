@@ -7,6 +7,7 @@ import java.util.UUID;
 public record PedidoForm(
         UUID id,
         LocalDateTime data,
-        BigDecimal desconto
+        BigDecimal desconto,
+        boolean ativo
 ) {
 }

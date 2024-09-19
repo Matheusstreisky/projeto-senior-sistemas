@@ -17,4 +17,6 @@ public interface ItemService {
     ItemDTO save(ItemForm itemDTOForm);
 
     void delete(UUID id);
+
+    void inactivate(UUID id);
 }

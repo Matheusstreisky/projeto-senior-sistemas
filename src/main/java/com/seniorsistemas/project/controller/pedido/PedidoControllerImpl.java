@@ -78,4 +78,17 @@ public class PedidoControllerImpl implements PedidoController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @Override
+    @PutMapping("/{id}/inactivate")
+    public ResponseEntity<Void> inactivate(UUID id) {
+        Optional<PedidoDTO> existingItem = pedidoService.findById(id);
+
+        if (existingItem.isPresent()) {
+            pedidoService.inactivate(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

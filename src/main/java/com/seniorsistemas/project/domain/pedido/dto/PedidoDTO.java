@@ -11,15 +11,16 @@ public record PedidoDTO(
         UUID id,
         LocalDateTime data,
         BigDecimal desconto,
+        boolean ativo,
         BigDecimal valorTotal,
         BigDecimal valorDesconto,
         List<ItemPedidoDTO> itens
 ) {
     public PedidoDTO withValorTotal(BigDecimal valorTotal) {
-        return new PedidoDTO(id, data, desconto, valorTotal, valorDesconto, itens);
+        return new PedidoDTO(id, data, desconto, ativo, valorTotal, valorDesconto, itens);
     }
 
     public PedidoDTO withValorDesconto(BigDecimal valorDesconto) {
-        return new PedidoDTO(id, data, desconto, valorTotal, valorDesconto, itens);
+        return new PedidoDTO(id, data, desconto, ativo, valorTotal, valorDesconto, itens);
     }
 }

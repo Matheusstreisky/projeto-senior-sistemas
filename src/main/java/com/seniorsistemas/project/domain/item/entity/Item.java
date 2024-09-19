@@ -31,4 +31,6 @@ public class Item {
     private TipoItem tipo;
 
     private BigDecimal valor;
+
+    private boolean ativo;
 }

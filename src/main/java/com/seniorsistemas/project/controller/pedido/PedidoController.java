@@ -31,4 +31,7 @@ public interface PedidoController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable UUID id);
+
+    @PutMapping("/{id}")
+    ResponseEntity<Void> inactivate(@PathVariable UUID id);
 }

@@ -76,4 +76,17 @@ public class ItemControllerImpl implements ItemController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @Override
+    @PutMapping("/{id}/inactivate")
+    public ResponseEntity<Void> inactivate(UUID id) {
+        Optional<ItemDTO> existingItem = itemService.findById(id);
+
+        if (existingItem.isPresent()) {
+            itemService.inactivate(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
