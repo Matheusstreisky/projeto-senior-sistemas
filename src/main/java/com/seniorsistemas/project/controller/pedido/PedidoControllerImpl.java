@@ -1,7 +1,6 @@
 package com.seniorsistemas.project.controller.pedido;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -9,6 +8,8 @@ import com.seniorsistemas.project.domain.pedido.dto.PedidoDTO;
 import com.seniorsistemas.project.domain.pedido.form.PedidoForm;
 import com.seniorsistemas.project.domain.pedido.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +28,8 @@ public class PedidoControllerImpl implements PedidoController {
 
     @Override
     @GetMapping
-    public ResponseEntity<List<PedidoDTO>> findAll() {
-        return ResponseEntity.ok(pedidoService.findAll());
+    public ResponseEntity<Page<PedidoDTO>> findAll(Pageable pageable) {
+        return ResponseEntity.ok(pedidoService.findAll(pageable));
     }
 
     @Override
@@ -56,12 +57,17 @@ public class PedidoControllerImpl implements PedidoController {
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<PedidoDTO> update(UUID id, PedidoForm pedidoForm) {
-        Optional<PedidoDTO> existingItem = pedidoService.findById(id);
+        try {
+            Optional<PedidoDTO> existingItem = pedidoService.findById(id);
 
-        if (existingItem.isPresent()) {
-            return ResponseEntity.ok(pedidoService.save(pedidoForm));
-        } else {
-            return ResponseEntity.notFound().build();
+            if (existingItem.isPresent()) {
+                pedidoForm.setId(id);
+                return ResponseEntity.ok(pedidoService.update(pedidoForm));
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -72,6 +78,32 @@ public class PedidoControllerImpl implements PedidoController {
 
         if (existingPedido.isPresent()) {
             pedidoService.delete(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Override
+    @PutMapping("/{id}/inactivate")
+    public ResponseEntity<Void> inactivate(UUID id) {
+        Optional<PedidoDTO> existingItem = pedidoService.findById(id);
+
+        if (existingItem.isPresent()) {
+            pedidoService.inactivate(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Override
+    @PutMapping("/{id}/close")
+    public ResponseEntity<Void> close(UUID id) {
+        Optional<PedidoDTO> existingItem = pedidoService.findById(id);
+
+        if (existingItem.isPresent()) {
+            pedidoService.close(id);
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();

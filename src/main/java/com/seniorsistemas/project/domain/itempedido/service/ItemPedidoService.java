@@ -1,19 +1,23 @@
 package com.seniorsistemas.project.domain.itempedido.service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import com.seniorsistemas.project.domain.itempedido.dto.ItemPedidoDTO;
+import com.seniorsistemas.project.domain.itempedido.entity.ItemPedido;
 import com.seniorsistemas.project.domain.itempedido.form.ItemPedidoForm;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ItemPedidoService {
 
     Optional<ItemPedidoDTO> findById(UUID id);
 
-    List<ItemPedidoDTO> findByPedido(UUID pedidoId);
+    Page<ItemPedidoDTO> findByPedido(UUID pedidoId, Pageable pageable);
 
-    ItemPedidoDTO save(ItemPedidoForm itemPedidoForm);
+    ItemPedidoDTO save(ItemPedidoForm itemPedidoForm) throws Exception;
+
+    void validate(ItemPedido itemPedido) throws Exception;
 
     void delete(UUID id);
 }

@@ -1,10 +1,12 @@
 package com.seniorsistemas.project.controller.itempedido;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.seniorsistemas.project.domain.itempedido.dto.ItemPedidoDTO;
 import com.seniorsistemas.project.domain.itempedido.form.ItemPedidoForm;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface ItemPedidoController {
 
     @GetMapping("/{pedidoId}")
-    ResponseEntity<List<ItemPedidoDTO>> findByPedido(@PathVariable UUID pedidoId);
+    ResponseEntity<Page<ItemPedidoDTO>> findByPedido(@PathVariable UUID pedidoId, @PageableDefault(size = 10) Pageable pageable);
 
     @PostMapping
     ResponseEntity<ItemPedidoDTO> create(@RequestBody ItemPedidoForm itemPedidoForm);

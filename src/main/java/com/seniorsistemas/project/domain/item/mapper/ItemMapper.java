@@ -1,6 +1,5 @@
 package com.seniorsistemas.project.domain.item.mapper;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.seniorsistemas.project.domain.item.dto.ItemDTO;
@@ -17,8 +16,6 @@ public interface ItemMapper {
     ItemDTO toDTO(Item item);
 
     Item toEntity(ItemForm itemForm);
-
-    List<ItemDTO> toDTOList(List<Item> items);
 
     default Optional<ItemDTO> toOptionalItemDTO(Optional<Item> item) {
         return item.map(this::toDTO);
