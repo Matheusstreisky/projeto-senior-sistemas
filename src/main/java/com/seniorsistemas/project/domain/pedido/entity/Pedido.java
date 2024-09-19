@@ -7,7 +7,10 @@ import java.util.UUID;
 
 import com.seniorsistemas.project.domain.itempedido.entity.ItemPedido;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,6 +37,9 @@ public class Pedido {
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itens;
+
+    @Enumerated(EnumType.STRING)
+    private SituacaoPedido situacao;
 
     private boolean ativo;
 }

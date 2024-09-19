@@ -57,12 +57,16 @@ public class PedidoControllerImpl implements PedidoController {
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<PedidoDTO> update(UUID id, PedidoForm pedidoForm) {
-        Optional<PedidoDTO> existingItem = pedidoService.findById(id);
+        try {
+            Optional<PedidoDTO> existingItem = pedidoService.findById(id);
 
-        if (existingItem.isPresent()) {
-            return ResponseEntity.ok(pedidoService.save(pedidoForm));
-        } else {
-            return ResponseEntity.notFound().build();
+            if (existingItem.isPresent()) {
+                return ResponseEntity.ok(pedidoService.update(pedidoForm));
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -86,6 +90,19 @@ public class PedidoControllerImpl implements PedidoController {
 
         if (existingItem.isPresent()) {
             pedidoService.inactivate(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Override
+    @PutMapping("/{id}/close")
+    public ResponseEntity<Void> close(UUID id) {
+        Optional<PedidoDTO> existingItem = pedidoService.findById(id);
+
+        if (existingItem.isPresent()) {
+            pedidoService.close(id);
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();

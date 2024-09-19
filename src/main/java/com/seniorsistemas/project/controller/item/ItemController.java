@@ -32,6 +32,6 @@ public interface ItemController {
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable UUID id);
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/inactivate")
     ResponseEntity<Void> inactivate(@PathVariable UUID id);
 }

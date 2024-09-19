@@ -10,6 +10,9 @@ import com.seniorsistemas.project.domain.itempedido.entity.ItemPedido;
 import com.seniorsistemas.project.domain.itempedido.form.ItemPedidoForm;
 import com.seniorsistemas.project.domain.itempedido.mapper.ItemPedidoMapper;
 import com.seniorsistemas.project.domain.itempedido.repository.ItemPedidoRepository;
+import com.seniorsistemas.project.domain.pedido.entity.Pedido;
+import com.seniorsistemas.project.domain.pedido.repository.PedidoRepository;
+import com.seniorsistemas.project.domain.pedido.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +26,12 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
 
     @Autowired
     private ItemRepository itemRepository;
+
+    @Autowired
+    private PedidoRepository pedidoRepository;
+
+    @Autowired
+    private PedidoService pedidoService;
 
     @Override
     public Optional<ItemPedidoDTO> findById(UUID id) {
@@ -38,13 +47,21 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     @Override
     public ItemPedidoDTO save(ItemPedidoForm itemPedidoForm) throws Exception {
         ItemPedido itemPedido = ItemPedidoMapper.MAPPER.toEntity(itemPedidoForm);
-        Optional<Item> optionalItem = itemRepository.findById(itemPedido.getItem().getId());
+        validate(itemPedido);
+        return ItemPedidoMapper.MAPPER.toDTO(itemPedidoRepository.save(itemPedido));
+    }
 
+    @Override
+    public void validate(ItemPedido itemPedido) throws Exception {
+        Optional<Item> optionalItem = itemRepository.findById(itemPedido.getItem().getId());
         if (optionalItem.isPresent() && !optionalItem.get().isAtivo()) {
-            throw new Exception("O item está inativo");
+            throw new Exception("O item está inativo!");
         }
 
-        return ItemPedidoMapper.MAPPER.toDTO(itemPedidoRepository.save(itemPedido));
+        Optional<Pedido> optionalPedido = pedidoRepository.findById(itemPedido.getPedido().getId());
+        if (optionalItem.isPresent()) {
+            pedidoService.validate(optionalPedido.get());
+        }
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.util.UUID;
 import com.seniorsistemas.project.domain.item.entity.TipoItem;
 import com.seniorsistemas.project.domain.pedido.dto.PedidoDTO;
 import com.seniorsistemas.project.domain.pedido.entity.Pedido;
+import com.seniorsistemas.project.domain.pedido.entity.SituacaoPedido;
 import com.seniorsistemas.project.domain.pedido.form.PedidoForm;
 import com.seniorsistemas.project.domain.pedido.mapper.PedidoMapper;
 import com.seniorsistemas.project.domain.pedido.repository.PedidoRepository;
@@ -47,6 +48,20 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
+    public PedidoDTO update(PedidoForm pedidoForm) throws Exception {
+        Pedido pedido = PedidoMapper.MAPPER.toEntity(pedidoForm);
+        validate(pedido);
+        return save(pedidoForm);
+    }
+
+    @Override
+    public void validate(Pedido pedido) throws Exception {
+        if (pedido.getSituacao().equals(SituacaoPedido.FECHADO)) {
+            throw new Exception("O pedido já foi fechado!");
+        }
+    }
+
+    @Override
     public void delete(UUID id) {
         pedidoRepository.deleteById(id);
     }
@@ -55,9 +70,18 @@ public class PedidoServiceImpl implements PedidoService {
     public void inactivate(UUID id) {
         Optional<Pedido> optionalPedido = pedidoRepository.findById(id);
 
-        optionalPedido.ifPresent(item -> {
-            item.setAtivo(false);
-            pedidoRepository.save(item);
+        optionalPedido.ifPresent(pedido -> {
+            pedido.setAtivo(false);
+            pedidoRepository.save(pedido);
+        });
+    }
+
+    @Override
+    public void close(UUID id) {
+        Optional<Pedido> optionalPedido = pedidoRepository.findById(id);
+        optionalPedido.ifPresent(pedido -> {
+            pedido.setSituacao(SituacaoPedido.FECHADO);
+            pedidoRepository.save(pedido);
         });
     }
 
