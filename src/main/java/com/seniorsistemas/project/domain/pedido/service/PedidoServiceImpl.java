@@ -44,6 +44,7 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     public PedidoDTO save(PedidoForm pedidoForm) {
         Pedido pedido = PedidoMapper.MAPPER.toEntity(pedidoForm);
+        pedido.setAtivo(true);
         return PedidoMapper.MAPPER.toDTO(pedidoRepository.save(pedido));
     }
 

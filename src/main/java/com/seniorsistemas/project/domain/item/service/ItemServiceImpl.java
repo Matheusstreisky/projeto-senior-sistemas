@@ -33,6 +33,13 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDTO save(ItemForm itemForm) {
         Item item = ItemMapper.MAPPER.toEntity(itemForm);
+        item.setAtivo(true);
+        return ItemMapper.MAPPER.toDTO(itemRepository.save(item));
+    }
+
+    @Override
+    public ItemDTO update(ItemForm itemForm) {
+        Item item = ItemMapper.MAPPER.toEntity(itemForm);
         return ItemMapper.MAPPER.toDTO(itemRepository.save(item));
     }
 

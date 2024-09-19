@@ -61,6 +61,7 @@ public class PedidoControllerImpl implements PedidoController {
             Optional<PedidoDTO> existingItem = pedidoService.findById(id);
 
             if (existingItem.isPresent()) {
+                pedidoForm.setId(id);
                 return ResponseEntity.ok(pedidoService.update(pedidoForm));
             } else {
                 return ResponseEntity.notFound().build();

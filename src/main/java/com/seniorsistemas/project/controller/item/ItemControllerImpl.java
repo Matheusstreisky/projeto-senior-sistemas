@@ -58,7 +58,8 @@ public class ItemControllerImpl implements ItemController {
         Optional<ItemDTO> existingItem = itemService.findById(id);
 
         if (existingItem.isPresent()) {
-            return ResponseEntity.ok(itemService.save(itemForm));
+            itemForm.setId(id);
+            return ResponseEntity.ok(itemService.update(itemForm));
         } else {
             return ResponseEntity.notFound().build();
         }

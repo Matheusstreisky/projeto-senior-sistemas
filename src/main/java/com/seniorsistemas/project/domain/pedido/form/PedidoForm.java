@@ -5,12 +5,16 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.seniorsistemas.project.domain.pedido.entity.SituacaoPedido;
+import lombok.Getter;
+import lombok.Setter;
 
-public record PedidoForm(
-        UUID id,
-        LocalDateTime data,
-        BigDecimal desconto,
-        SituacaoPedido situacao,
-        boolean ativo
-) {
+@Getter
+@Setter
+public class PedidoForm {
+
+    private UUID id;
+    private LocalDateTime data;
+    private BigDecimal desconto;
+    private SituacaoPedido situacao;
+    private boolean ativo;
 }

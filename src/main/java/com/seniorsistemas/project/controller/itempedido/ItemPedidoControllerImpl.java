@@ -56,6 +56,7 @@ public class ItemPedidoControllerImpl implements ItemPedidoController {
             Optional<ItemPedidoDTO> existingItemPedido = itemPedidoService.findById(id);
 
             if (existingItemPedido.isPresent()) {
+                itemPedidoForm.setId(id);
                 return ResponseEntity.ok(itemPedidoService.save(itemPedidoForm));
             } else {
                 return ResponseEntity.notFound().build();

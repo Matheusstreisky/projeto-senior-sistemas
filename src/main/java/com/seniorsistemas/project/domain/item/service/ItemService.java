@@ -14,7 +14,9 @@ public interface ItemService {
 
     Optional<ItemDTO> findById(UUID id);
 
-    ItemDTO save(ItemForm itemDTOForm);
+    ItemDTO save(ItemForm itemForm);
+
+    ItemDTO update(ItemForm itemForm);
 
     void delete(UUID id);
 
