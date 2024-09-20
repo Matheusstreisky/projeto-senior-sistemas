@@ -2,6 +2,7 @@ package com.seniorsistemas.project.config.validation.exception.handler;
 
 import java.util.List;
 
+import com.seniorsistemas.project.config.validation.exception.ItemIsBeingUsedInPedidoException;
 import com.seniorsistemas.project.config.validation.exception.ItemIsInactiveException;
 import com.seniorsistemas.project.config.validation.exception.NotFoundException;
 import com.seniorsistemas.project.config.validation.exception.PedidoIsAlreadyClosedException;
@@ -25,7 +26,7 @@ public class ExceptionHandlerController {
     }
 
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({PedidoIsAlreadyClosedException.class, ItemIsInactiveException.class})
+    @ExceptionHandler({PedidoIsAlreadyClosedException.class, ItemIsInactiveException.class, ItemIsBeingUsedInPedidoException.class})
     public ErrorDTO handleOtherValidationsErros(Exception ex) {
         return new ErrorDTO(ex.getMessage());
     }

@@ -3,6 +3,7 @@ package com.seniorsistemas.project.domain.item.service;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.seniorsistemas.project.config.validation.exception.ItemIsBeingUsedInPedidoException;
 import com.seniorsistemas.project.config.validation.exception.NotFoundException;
 import com.seniorsistemas.project.domain.item.dto.ItemDTO;
 import com.seniorsistemas.project.domain.item.entity.Item;
@@ -51,6 +52,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void delete(UUID id) {
         validateNotFound(id);
+        if (itemRepository.verifyIfItemIsBeingUsedInPedido(id) > 0) {
+            throw new ItemIsBeingUsedInPedidoException();
+        }
+
         itemRepository.deleteById(id);
     }
 

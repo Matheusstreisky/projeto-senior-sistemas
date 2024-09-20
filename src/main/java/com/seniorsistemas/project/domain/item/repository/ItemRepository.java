@@ -19,4 +19,9 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
             @Param("descricao") String descricao,
             @Param("tipo") TipoItem tipo,
             Pageable pageable);
+
+    @Query(value = "SELECT COUNT(i.*) FROM item i " +
+            "JOIN item_pedido ip ON ip.item_id = i.id " +
+            "WHERE i.id = :id", nativeQuery = true)
+    Integer verifyIfItemIsBeingUsedInPedido(@Param("id") UUID id);
 }

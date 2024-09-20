@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.seniorsistemas.project.config.validation.exception.ItemIsBeingUsedInPedidoException;
 import com.seniorsistemas.project.config.validation.exception.NotFoundException;
 import com.seniorsistemas.project.domain.item.dto.ItemDTO;
 import com.seniorsistemas.project.domain.item.entity.Item;
@@ -124,6 +125,17 @@ class ItemServiceTest {
 
         Mockito.verify(itemRepository, Mockito.times(1)).findById(id);
         Mockito.verify(itemRepository, Mockito.times(1)).deleteById(id);
+    }
+
+    @Test
+    void shouldThrowItemIsBeingUsedInPedidoExceptionWhenItemIsBeingUsedInPedido() {
+        UUID id = item.getId();
+        Mockito.when(itemRepository.findById(id)).thenReturn(Optional.of(item));
+        Mockito.when(itemRepository.verifyIfItemIsBeingUsedInPedido(id)).thenReturn(1);
+
+        Assertions.assertThrows(ItemIsBeingUsedInPedidoException.class, () -> itemService.delete(id));
+
+        Mockito.verify(itemRepository, Mockito.times(1)).findById(id);
     }
 
     @Test
