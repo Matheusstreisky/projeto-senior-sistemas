@@ -72,9 +72,7 @@ Para listar os endpoints do projeto, assim como as informações do que cada end
 
 Então para acessar a documentação é necessário executar o projeto, e com ele em execução acessar a seguinte URL:
 
-```
-http://localhost:8080/swagger-ui/index.html#/
-```
+> http://localhost:8080/swagger-ui/index.html#/
 
 ## Testes
 Foram criados testes unitários para o projeto, que está com cobertura de 100% das classes implementadas.
