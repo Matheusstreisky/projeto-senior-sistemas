@@ -1,8 +1,8 @@
 package com.seniorsistemas.project.config.validation.exception;
 
-public class ItemIsInactive extends RuntimeException {
+public class ItemIsInactiveException extends RuntimeException {
 
-    public ItemIsInactive() {
+    public ItemIsInactiveException() {
         super("Item is inactive.");
     }
 }

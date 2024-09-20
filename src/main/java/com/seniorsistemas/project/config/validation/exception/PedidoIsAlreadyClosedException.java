@@ -1,8 +1,8 @@
 package com.seniorsistemas.project.config.validation.exception;
 
-public class PedidoIsAlreadyClosed extends RuntimeException {
+public class PedidoIsAlreadyClosedException extends RuntimeException {
 
-    public PedidoIsAlreadyClosed() {
+    public PedidoIsAlreadyClosedException() {
         super("Pedido is already closed.");
     }
 }

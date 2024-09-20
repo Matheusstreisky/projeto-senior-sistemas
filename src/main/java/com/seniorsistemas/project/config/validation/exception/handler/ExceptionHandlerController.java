@@ -2,9 +2,9 @@ package com.seniorsistemas.project.config.validation.exception.handler;
 
 import java.util.List;
 
-import com.seniorsistemas.project.config.validation.exception.ItemIsInactive;
+import com.seniorsistemas.project.config.validation.exception.ItemIsInactiveException;
 import com.seniorsistemas.project.config.validation.exception.NotFoundException;
-import com.seniorsistemas.project.config.validation.exception.PedidoIsAlreadyClosed;
+import com.seniorsistemas.project.config.validation.exception.PedidoIsAlreadyClosedException;
 import com.seniorsistemas.project.config.validation.exception.dto.ErrorDTO;
 import com.seniorsistemas.project.config.validation.exception.dto.ValidationErrorDTO;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class ExceptionHandlerController {
     }
 
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({PedidoIsAlreadyClosed.class, ItemIsInactive.class})
+    @ExceptionHandler({PedidoIsAlreadyClosedException.class, ItemIsInactiveException.class})
     public ErrorDTO handleOtherValidationsErros(Exception ex) {
         return new ErrorDTO(ex.getMessage());
     }

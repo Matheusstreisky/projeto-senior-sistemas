@@ -3,7 +3,7 @@ package com.seniorsistemas.project.domain.itempedido.service;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.seniorsistemas.project.config.validation.exception.ItemIsInactive;
+import com.seniorsistemas.project.config.validation.exception.ItemIsInactiveException;
 import com.seniorsistemas.project.config.validation.exception.NotFoundException;
 import com.seniorsistemas.project.domain.item.entity.Item;
 import com.seniorsistemas.project.domain.item.repository.ItemRepository;
@@ -70,7 +70,7 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     public void validate(ItemPedido itemPedido) {
         Optional<Item> optionalItem = itemRepository.findById(itemPedido.getItem().getId());
         if (optionalItem.isPresent() && !optionalItem.get().isAtivo()) {
-            throw new ItemIsInactive();
+            throw new ItemIsInactiveException();
         }
 
         Optional<Pedido> optionalPedido = pedidoRepository.findById(itemPedido.getPedido().getId());
