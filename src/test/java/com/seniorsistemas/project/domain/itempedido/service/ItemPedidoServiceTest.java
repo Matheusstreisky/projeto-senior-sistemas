@@ -1,6 +1,7 @@
 package com.seniorsistemas.project.domain.itempedido.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -66,7 +67,7 @@ class ItemPedidoServiceTest {
     @BeforeEach
     void setup() {
         item = new Item(UUID.randomUUID(), "Produto Teste", TipoItem.PRODUTO, BigDecimal.valueOf(100), true);
-        pedido = new Pedido(UUID.randomUUID(), null, null, null, null, true);
+        pedido = new Pedido(UUID.randomUUID(), LocalDateTime.now(), BigDecimal.valueOf(10), null, SituacaoPedido.ABERTO, true);
         itemPedido = new ItemPedido(UUID.randomUUID(), pedido, item, 1);
 
         itemDTO = new ItemDTO(item.getId(), item.getDescricao(), item.getTipo(), item.getValor(), item.isAtivo());
