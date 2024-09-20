@@ -12,10 +12,10 @@ Projeto realizado como parte do processo de seleção da Senior Sistemas.
 * Swagger para documentação
 
 ## Informações do projeto
-O projeto consiste em uma aplicação Spring REST que possui CRUD para Item, Pedido e Itens de Pedido.
+O projeto consiste em uma aplicação Spring REST que possui CRUD para *Item*, *Pedido* e *Itens de Pedido*.
 
 Os requisitos do projeto consistem em:
-* Deverá ser desenvolvido um cadastro (Create/Read/Update/Delete/List com paginação) para as seguintes entidades: produto/serviço, pedido e itens de pedido.
+* Deverá ser desenvolvido um cadastro (Create/Read/Update/Delete/List com paginação) para as seguintes entidades: produto/serviço (item), pedido e itens de pedido.
 * Deverá ser possível aplicar filtros na listagem.
 * As entidades deverão utilizar Bean Validation.
 * Deverá ser implementado um ControllerAdvice para customizar os HTTP Response das requisições (mínimo BAD REQUEST).
@@ -47,7 +47,7 @@ Também é possível executar via linha de comando, indo na raiz do projeto e ex
 mvnw.cmd spring-boot:run
 ```
 
-### Documentação
+## Documentação
 Para listar os endpoints do projeto, assim como as informações do que cada endpoint faz, seus parâmetros e seus retornos, foi utilizado Swagger.
 
 Então para acessar a documentação é necessário executar o projeto, e com ele em execução acessar a seguinte URL:
@@ -55,3 +55,6 @@ Então para acessar a documentação é necessário executar o projeto, e com el
 ```
 http://localhost:8080/swagger-ui/index.html#/
 ```
+
+## Testes
+Foram criados testes unitários para o projeto, que está com cobertura de 100% das classes implementadas.
