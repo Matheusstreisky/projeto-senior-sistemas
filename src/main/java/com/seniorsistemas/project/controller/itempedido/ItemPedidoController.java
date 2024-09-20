@@ -6,26 +6,17 @@ import com.seniorsistemas.project.domain.itempedido.dto.ItemPedidoDTO;
 import com.seniorsistemas.project.domain.itempedido.form.ItemPedidoForm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 public interface ItemPedidoController {
 
-    @GetMapping("/{pedidoId}")
-    ResponseEntity<Page<ItemPedidoDTO>> findByPedido(@PathVariable UUID pedidoId, @PageableDefault(size = 10) Pageable pageable);
+    ResponseEntity<Page<ItemPedidoDTO>> findByPedido(UUID pedidoId, Pageable pageable);
 
-    @PostMapping
-    ResponseEntity<ItemPedidoDTO> create(@RequestBody ItemPedidoForm itemPedidoForm);
+    ResponseEntity<ItemPedidoDTO> findById(UUID id);
 
-    @PutMapping("/{id}")
-    ResponseEntity<ItemPedidoDTO> update(@PathVariable UUID id, @RequestBody ItemPedidoForm itemPedidoForm);
+    ResponseEntity<ItemPedidoDTO> create(ItemPedidoForm itemPedidoForm);
 
-    @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable UUID id);
+    ResponseEntity<ItemPedidoDTO> update(UUID id, ItemPedidoForm itemPedidoForm);
+
+    ResponseEntity<Void> delete(UUID id);
 }

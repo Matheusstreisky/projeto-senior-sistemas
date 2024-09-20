@@ -3,6 +3,8 @@ package com.seniorsistemas.project.domain.itempedido.service;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.seniorsistemas.project.config.validation.exception.ItemIsInactiveException;
+import com.seniorsistemas.project.config.validation.exception.NotFoundException;
 import com.seniorsistemas.project.domain.item.entity.Item;
 import com.seniorsistemas.project.domain.item.repository.ItemRepository;
 import com.seniorsistemas.project.domain.itempedido.dto.ItemPedidoDTO;
@@ -34,28 +36,41 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     private PedidoService pedidoService;
 
     @Override
-    public Optional<ItemPedidoDTO> findById(UUID id) {
-        return ItemPedidoMapper.MAPPER.toOptionalItemDTO(itemPedidoRepository.findById(id));
-    }
-
-    @Override
     public Page<ItemPedidoDTO> findByPedido(UUID pedidoId, Pageable pageable) {
         Page<ItemPedido> itemPedidoPage = itemPedidoRepository.findByPedido_Id(pedidoId, pageable);
         return itemPedidoPage.map(ItemPedidoMapper.MAPPER::toDTO);
     }
 
     @Override
-    public ItemPedidoDTO save(ItemPedidoForm itemPedidoForm) throws Exception {
+    public ItemPedidoDTO findById(UUID id) {
+        validateNotFound(id);
+        return ItemPedidoMapper.MAPPER.toDTO(itemPedidoRepository.findById(id).get());
+    }
+
+    @Override
+    public ItemPedidoDTO save(ItemPedidoForm itemPedidoForm) {
         ItemPedido itemPedido = ItemPedidoMapper.MAPPER.toEntity(itemPedidoForm);
         validate(itemPedido);
         return ItemPedidoMapper.MAPPER.toDTO(itemPedidoRepository.save(itemPedido));
     }
 
     @Override
-    public void validate(ItemPedido itemPedido) throws Exception {
+    public ItemPedidoDTO update(ItemPedidoForm itemPedidoForm) {
+        validateNotFound(itemPedidoForm.getId());
+        return save(itemPedidoForm);
+    }
+
+    @Override
+    public void delete(UUID id) {
+        validateNotFound(id);
+        itemPedidoRepository.deleteById(id);
+    }
+
+    @Override
+    public void validate(ItemPedido itemPedido) {
         Optional<Item> optionalItem = itemRepository.findById(itemPedido.getItem().getId());
         if (optionalItem.isPresent() && !optionalItem.get().isAtivo()) {
-            throw new Exception("O item está inativo!");
+            throw new ItemIsInactiveException();
         }
 
         Optional<Pedido> optionalPedido = pedidoRepository.findById(itemPedido.getPedido().getId());
@@ -65,7 +80,10 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     }
 
     @Override
-    public void delete(UUID id) {
-        itemPedidoRepository.deleteById(id);
+    public void validateNotFound(UUID id) {
+        Optional<ItemPedido> optionalItemPedido = itemPedidoRepository.findById(id);
+        if (optionalItemPedido.isEmpty()) {
+            throw new NotFoundException(id);
+        }
     }
 }

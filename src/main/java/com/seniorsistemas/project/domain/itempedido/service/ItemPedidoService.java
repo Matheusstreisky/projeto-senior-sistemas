@@ -1,6 +1,5 @@
 package com.seniorsistemas.project.domain.itempedido.service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import com.seniorsistemas.project.domain.itempedido.dto.ItemPedidoDTO;
@@ -11,13 +10,17 @@ import org.springframework.data.domain.Pageable;
 
 public interface ItemPedidoService {
 
-    Optional<ItemPedidoDTO> findById(UUID id);
-
     Page<ItemPedidoDTO> findByPedido(UUID pedidoId, Pageable pageable);
 
-    ItemPedidoDTO save(ItemPedidoForm itemPedidoForm) throws Exception;
+    ItemPedidoDTO findById(UUID id);
 
-    void validate(ItemPedido itemPedido) throws Exception;
+    ItemPedidoDTO save(ItemPedidoForm itemPedidoForm);
+
+    ItemPedidoDTO update(ItemPedidoForm itemPedidoForm);
 
     void delete(UUID id);
+
+    void validate(ItemPedido itemPedido);
+
+    void validateNotFound(UUID id);
 }

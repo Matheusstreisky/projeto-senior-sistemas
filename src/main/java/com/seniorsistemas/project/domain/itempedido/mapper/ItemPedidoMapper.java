@@ -1,7 +1,5 @@
 package com.seniorsistemas.project.domain.itempedido.mapper;
 
-import java.util.Optional;
-
 import com.seniorsistemas.project.domain.itempedido.dto.ItemPedidoDTO;
 import com.seniorsistemas.project.domain.itempedido.entity.ItemPedido;
 import com.seniorsistemas.project.domain.itempedido.form.ItemPedidoForm;
@@ -16,8 +14,4 @@ public interface ItemPedidoMapper {
     ItemPedidoDTO toDTO(ItemPedido itemPedido);
 
     ItemPedido toEntity(ItemPedidoForm itemPedidoForm);
-
-    default Optional<ItemPedidoDTO> toOptionalItemDTO(Optional<ItemPedido> itemPedido) {
-        return itemPedido.map(this::toDTO);
-    }
 }

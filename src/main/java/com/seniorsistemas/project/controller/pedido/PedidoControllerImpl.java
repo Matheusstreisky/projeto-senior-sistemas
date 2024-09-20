@@ -1,21 +1,26 @@
 package com.seniorsistemas.project.controller.pedido;
 
 import java.net.URI;
-import java.util.Optional;
 import java.util.UUID;
 
 import com.seniorsistemas.project.domain.pedido.dto.PedidoDTO;
+import com.seniorsistemas.project.domain.pedido.entity.SituacaoPedido;
 import com.seniorsistemas.project.domain.pedido.form.PedidoForm;
 import com.seniorsistemas.project.domain.pedido.service.PedidoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -28,22 +33,21 @@ public class PedidoControllerImpl implements PedidoController {
 
     @Override
     @GetMapping
-    public ResponseEntity<Page<PedidoDTO>> findAll(Pageable pageable) {
-        return ResponseEntity.ok(pedidoService.findAll(pageable));
+    public ResponseEntity<Page<PedidoDTO>> findAll(
+            @RequestParam(required = false) SituacaoPedido situacao,
+            @PageableDefault(size = 10) Pageable pageable) {
+        return ResponseEntity.ok(pedidoService.findAll(situacao, pageable));
     }
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<PedidoDTO> findById(UUID id) {
-        Optional<PedidoDTO> pedidoDTO = pedidoService.findById(id);
-        return pedidoDTO
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<PedidoDTO> findById(@PathVariable UUID id) {
+        return ResponseEntity.ok(pedidoService.findById(id));
     }
 
     @Override
     @PostMapping
-    public ResponseEntity<PedidoDTO> create(PedidoForm pedidoForm) {
+    public ResponseEntity<PedidoDTO> create(@Valid @RequestBody PedidoForm pedidoForm) {
         PedidoDTO createdPedido = pedidoService.save(pedidoForm);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -56,57 +60,29 @@ public class PedidoControllerImpl implements PedidoController {
 
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<PedidoDTO> update(UUID id, PedidoForm pedidoForm) {
-        try {
-            Optional<PedidoDTO> existingItem = pedidoService.findById(id);
-
-            if (existingItem.isPresent()) {
-                pedidoForm.setId(id);
-                return ResponseEntity.ok(pedidoService.update(pedidoForm));
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<PedidoDTO> update(@PathVariable UUID id, @Valid @RequestBody PedidoForm pedidoForm) {
+        pedidoForm.setId(id);
+        return ResponseEntity.ok(pedidoService.update(pedidoForm));
     }
 
     @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(UUID id) {
-        Optional<PedidoDTO> existingPedido = pedidoService.findById(id);
-
-        if (existingPedido.isPresent()) {
-            pedidoService.delete(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        pedidoService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     @Override
     @PutMapping("/{id}/inactivate")
-    public ResponseEntity<Void> inactivate(UUID id) {
-        Optional<PedidoDTO> existingItem = pedidoService.findById(id);
-
-        if (existingItem.isPresent()) {
-            pedidoService.inactivate(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> inactivate(@PathVariable UUID id) {
+        pedidoService.inactivate(id);
+        return ResponseEntity.noContent().build();
     }
 
     @Override
     @PutMapping("/{id}/close")
-    public ResponseEntity<Void> close(UUID id) {
-        Optional<PedidoDTO> existingItem = pedidoService.findById(id);
-
-        if (existingItem.isPresent()) {
-            pedidoService.close(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> close(@PathVariable UUID id) {
+        pedidoService.close(id);
+        return ResponseEntity.noContent().build();
     }
 }

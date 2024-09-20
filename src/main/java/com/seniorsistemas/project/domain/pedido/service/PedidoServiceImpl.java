@@ -5,6 +5,8 @@ import java.math.RoundingMode;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.seniorsistemas.project.config.validation.exception.NotFoundException;
+import com.seniorsistemas.project.config.validation.exception.PedidoIsAlreadyClosedException;
 import com.seniorsistemas.project.domain.item.entity.TipoItem;
 import com.seniorsistemas.project.domain.pedido.dto.PedidoDTO;
 import com.seniorsistemas.project.domain.pedido.entity.Pedido;
@@ -24,21 +26,17 @@ public class PedidoServiceImpl implements PedidoService {
     private PedidoRepository pedidoRepository;
 
     @Override
-    public Page<PedidoDTO> findAll(Pageable pageable) {
-        Page<Pedido> pedidoPage = pedidoRepository.findAll(pageable);
+    public Page<PedidoDTO> findAll(SituacaoPedido situacao, Pageable pageable) {
+        Page<Pedido> pedidoPage = pedidoRepository.findAll(situacao, pageable);
         return pedidoPage.map(this::calcularValores);
     }
 
     @Override
-    public Optional<PedidoDTO> findById(UUID id) {
-        Optional<Pedido> pedido = pedidoRepository.findById(id);
+    public PedidoDTO findById(UUID id) {
+        validateNotFound(id);
 
-        if (pedido.isPresent()) {
-            PedidoDTO pedidoDTO = calcularValores(pedido.get());
-            return Optional.of(pedidoDTO);
-        }
-
-        return Optional.empty();
+        Pedido pedido = pedidoRepository.findById(id).get();
+        return calcularValores(pedido);
     }
 
     @Override
@@ -49,41 +47,51 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public PedidoDTO update(PedidoForm pedidoForm) throws Exception {
+    public PedidoDTO update(PedidoForm pedidoForm) {
+        validateNotFound(pedidoForm.getId());
+
         Pedido pedido = PedidoMapper.MAPPER.toEntity(pedidoForm);
         validate(pedido);
-        return save(pedidoForm);
-    }
-
-    @Override
-    public void validate(Pedido pedido) throws Exception {
-        if (pedido.getSituacao().equals(SituacaoPedido.FECHADO)) {
-            throw new Exception("O pedido já foi fechado!");
-        }
+        return PedidoMapper.MAPPER.toDTO(pedidoRepository.save(pedido));
     }
 
     @Override
     public void delete(UUID id) {
+        validateNotFound(id);
         pedidoRepository.deleteById(id);
     }
 
     @Override
     public void inactivate(UUID id) {
-        Optional<Pedido> optionalPedido = pedidoRepository.findById(id);
+        validateNotFound(id);
 
-        optionalPedido.ifPresent(pedido -> {
-            pedido.setAtivo(false);
-            pedidoRepository.save(pedido);
-        });
+        Pedido pedido = pedidoRepository.findById(id).get();
+        pedido.setAtivo(false);
+        pedidoRepository.save(pedido);
     }
 
     @Override
     public void close(UUID id) {
+        validateNotFound(id);
+
+        Pedido pedido = pedidoRepository.findById(id).get();
+        pedido.setSituacao(SituacaoPedido.FECHADO);
+        pedidoRepository.save(pedido);
+    }
+
+    @Override
+    public void validate(Pedido pedido) {
+        if (pedido.getSituacao().equals(SituacaoPedido.FECHADO)) {
+            throw new PedidoIsAlreadyClosedException();
+        }
+    }
+
+    @Override
+    public void validateNotFound(UUID id) {
         Optional<Pedido> optionalPedido = pedidoRepository.findById(id);
-        optionalPedido.ifPresent(pedido -> {
-            pedido.setSituacao(SituacaoPedido.FECHADO);
-            pedidoRepository.save(pedido);
-        });
+        if (optionalPedido.isEmpty()) {
+            throw new NotFoundException(id);
+        }
     }
 
     private PedidoDTO calcularValores(Pedido pedido) {
