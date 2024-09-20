@@ -4,7 +4,7 @@ Projeto realizado como parte do processo de seleção da Senior Sistemas.
 ## Tecnologias utilizadas
 * Java 17
 * Maven
-* Spring 3.3.3
+* Spring Boot 3.3.3
 * Spring Data JPA
 * Spring Validation
 * Banco de dados PostgreSQL 16.4
@@ -32,8 +32,28 @@ Os criterios de aceitação do projeto são:
 * O código não poderá ter erros de compilação.
 * Deverá haver uma documentação mínima de como executar o projeto e suas funcionalidades
 
+## Banco de dados
+Antes que possa executar o projeto é preciso que seja criado um banco de dados. No PostgreSQL, crie um novo banco de dados com o seguinte nome: 
+
+```
+projeto-senior-sistemas
+```
+
+A criação das tabelas será feita pelo próprio projeto, sem a necessidade de precisar executar nenhum script.
+
+O usuário e senha do banco de dados configurados neste projeto foram:
+
+```
+username: postgres
+password: 1234
+```
+
+Caso deseje alterar qualquer uma as configurações de banco de dados, basta ajustar o arquivo ***application.properties***.
+O caminho do arquivo é:
+> src/main/resources/application.properties
+
 ## Execução do projeto
-Para executar o projeto, basta baixar o fonte, abrir em sua IDE de preferencia e executar o arquivo ProjetoSeniorSistemasApplication.java.
+Com o banco de dados configurado, para executar o projeto basta baixar o fonte, abrir em sua IDE de preferencia e executar o arquivo ProjetoSeniorSistemasApplication.java.
 
 Também é possível executar via linha de comando, indo na raiz do projeto e executando o comando:
 
