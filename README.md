@@ -39,7 +39,7 @@ Antes que possa executar o projeto é preciso que seja criado um banco de dados.
 projeto-senior-sistemas
 ```
 
-A criação das tabelas será feita pelo próprio projeto, sem a necessidade de precisar executar nenhum script.
+A criação das tabelas será feita pelo próprio projeto, sem a necessidade de executar nenhum script.
 
 O usuário e senha do banco de dados configurados neste projeto foram:
 
@@ -48,7 +48,7 @@ username: postgres
 password: 1234
 ```
 
-Caso deseje alterar qualquer uma as configurações de banco de dados, basta ajustar o arquivo ***application.properties***.
+Caso deseje alterar qualquer uma das configurações de banco de dados, basta ajustar o arquivo ***application.properties***.
 O caminho do arquivo é:
 > src/main/resources/application.properties
 
