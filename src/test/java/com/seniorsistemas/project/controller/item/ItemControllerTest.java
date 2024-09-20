@@ -74,7 +74,8 @@ class ItemControllerTest {
         UUID id = itemForm.getId();
         Mockito.when(itemService.findById(id)).thenReturn(itemDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(ITEM_URL_WITH_ID, id)
+        mockMvc.perform(
+                MockMvcRequestBuilders.get(ITEM_URL_WITH_ID, id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(id.toString()));
@@ -85,16 +86,31 @@ class ItemControllerTest {
         UUID id = UUID.randomUUID();
         Mockito.doThrow(new NotFoundException(id)).when(itemService).findById(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(ITEM_URL_WITH_ID, id)
+        mockMvc.perform(
+                MockMvcRequestBuilders.get(ITEM_URL_WITH_ID, id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    public void shouldReturnBadRequestStatusWhenItemFormIsInvalid() throws Exception {
+        itemForm.setDescricao("");
+        itemForm.setTipo(null);
+        itemForm.setValor(null);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post(ITEM_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(itemForm)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     void shouldCreateItem() throws Exception {
         Mockito.when(itemService.save(itemForm)).thenReturn(itemDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.post(ITEM_URL)
+        mockMvc.perform(
+                MockMvcRequestBuilders.post(ITEM_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(itemForm)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -106,7 +122,8 @@ class ItemControllerTest {
         UUID id = itemForm.getId();
         Mockito.when(itemService.update(itemForm)).thenReturn(itemDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.put(ITEM_URL_WITH_ID, id)
+        mockMvc.perform(
+                MockMvcRequestBuilders.put(ITEM_URL_WITH_ID, id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(itemForm)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -118,7 +135,8 @@ class ItemControllerTest {
         UUID id = itemForm.getId();
         Mockito.doNothing().when(itemService).delete(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(ITEM_URL_WITH_ID, id)
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete(ITEM_URL_WITH_ID, id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
@@ -128,7 +146,8 @@ class ItemControllerTest {
         UUID id = itemForm.getId();
         Mockito.doThrow(new ItemIsBeingUsedInPedidoException()).when(itemService).delete(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(ITEM_URL_WITH_ID, id)
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete(ITEM_URL_WITH_ID, id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
@@ -138,7 +157,8 @@ class ItemControllerTest {
         UUID id = itemForm.getId();
         Mockito.doNothing().when(itemService).inactivate(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.put(ITEM_URL_WITH_ID + "/inactivate", id)
+        mockMvc.perform(
+                MockMvcRequestBuilders.put(ITEM_URL_WITH_ID + "/inactivate", id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }

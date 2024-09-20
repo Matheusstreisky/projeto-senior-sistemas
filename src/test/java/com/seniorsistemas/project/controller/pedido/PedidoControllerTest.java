@@ -88,9 +88,23 @@ class PedidoControllerTest {
         UUID id = UUID.randomUUID();
         Mockito.doThrow(new NotFoundException(id)).when(pedidoService).findById(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(PEDIDO_URL_WITH_ID, id)
+        mockMvc.perform(
+                MockMvcRequestBuilders.get(PEDIDO_URL_WITH_ID, id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    public void shouldReturnBadRequestStatusWhenPedidoFormIsInvalid() throws Exception {
+        pedidoForm.setData(null);
+        pedidoForm.setDesconto(null);
+        pedidoForm.setSituacao(null);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post(PEDIDO_URL)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(pedidoForm)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test

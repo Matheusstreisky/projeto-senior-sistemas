@@ -101,6 +101,19 @@ class ItemPedidoControllerTest {
     }
 
     @Test
+    public void shouldReturnBadRequestStatusWhenItemPedidoFormIsInvalid() throws Exception {
+        itemPedidoForm.setPedido(null);
+        itemPedidoForm.setItem(null);
+        itemPedidoForm.setQuantidade(0);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post(ITEM_PEDIDO_URL)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(itemPedidoForm)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
     public void shouldCreateItemPedido() throws Exception {
         Mockito.when(itemPedidoService.save(itemPedidoForm)).thenReturn(itemPedidoDTO);
 
